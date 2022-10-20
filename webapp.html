@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+	<head>
+		<title>Bianca Raimondi - Computer Graphics</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- Libraries-->
+		<script src="libraries/dat.gui.js" defer></script>
+		<script src="libraries/glm_utils.js" defer></script>
+		<script src="libraries/jquery-3.6.0.js" defer></script>
+		<script src="libraries/load_mesh.js" defer></script>
+		<script src="libraries/m4.js" defer></script>
+		<script src="libraries/mesh_utils.js" defer></script>
+		<script src="libraries/webgl-utils.js" defer></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+			  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<link rel="stylesheet" href="stile.css">
+		<script src="camera.js" defer></script>
+		<script src="camera_utils.js" defer></script>
+		<script src="mesh_obj.js" defer></script>
+		<script src="scene_utils.js" defer></script>
+		<script src="utils.js" defer></script>
+		<script src="main.js" defer></script>
+
+
+		<script id="base-vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 a_position; //posizione del vertice
+			attribute vec3 a_normal; //normale
+			attribute vec2 a_texcoord; //coordinata della texture
+			attribute vec4 a_color; //colore alternativo alla texture
+
+			uniform mat4 u_projection;          // Projection Matrix - da 3D a 2D
+			uniform mat4 u_view;				// Camera View Matrix - spostamento telecamera
+			uniform mat4 u_world;				// World matrix - movimento oggetti
+			uniform vec3 u_viewWorldPosition;	// Camera position - posizione telecamera
+
+			varying vec3 v_normal;
+			varying vec3 v_surfaceToView;
+			varying vec2 v_texcoord;
+			varying vec4 v_color;
+
+
+			void main() {
+				vec4 world_position = u_world * a_position;  // World transform
+				gl_Position = u_projection * u_view * world_position; // Transform the location of the vertex
+				v_surfaceToView = u_viewWorldPosition - world_position.xyz;
+				v_normal = mat3(u_world) * a_normal;
+				v_texcoord = a_texcoord;
+				v_color = a_color;
+			}
+		</script>
+		<script id="base-fragment-shader" type="x-shader/x-fragment">
+			precision highp float;
+
+			varying vec3 v_normal;
+			varying vec2 v_texcoord;
+			varying vec4 v_color;
+			varying vec3 v_surfaceToView;
+
+
+			// Material Properties
+			uniform sampler2D diffuseMap;
+			uniform sampler2D normalMap;
+			uniform vec3 diffuse;
+			uniform vec3 ambient;
+			uniform vec3 emissive;
+			uniform vec3 specular;
+			uniform float shininess;
+			uniform float opacity;
+
+			// Light Properties
+			uniform vec3 u_lightDirection;
+			uniform vec3 u_lightColor;
+			uniform vec3 u_ambientLight;
+
+			void main () {
+				vec3 normal = normalize(v_normal) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
+
+				vec3 surfaceToViewDirection = normalize(v_surfaceToView);
+    			vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
+
+				float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
+    			float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
+
+    			vec4 diffuseMapColor = texture2D(diffuseMap, v_texcoord);
+    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * u_lightColor.rgb * v_color.rgb;
+    			float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+				gl_FragColor = vec4(
+					emissive +
+					ambient * u_ambientLight +
+					effectiveDiffuse * fakeLight +
+					specular * 0.01,
+					effectiveOpacity);
+			}
+		</script>
+
+<!--
+		<script id="skybox-vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 a_position;
+			varying vec4 v_position;
+
+			void main() {
+				v_position = a_position;
+				gl_Position = vec4(a_position.xy, 1, 1);
+			}
+		</script>
+		<script id="skybox-fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+
+			uniform samplerCube u_skybox;
+			uniform mat4 u_viewDirectionProjectionInverse;
+
+			uniform vec3 u_lightColor;
+
+			varying vec4 v_position;
+			void main() {
+				vec4 t = u_viewDirectionProjectionInverse * v_position;
+				gl_FragColor = textureCube(u_skybox, normalize(t.xyz / t.w)) * vec4(u_lightColor,1);
+			}
+		</script>
+-->
+
+		<script  id="vertex-shader-3d" type="x-shader/x-vertex">
+			attribute vec4 a_position;
+			attribute vec2 a_texcoord;
+			attribute vec3 a_normal;
+			attribute vec4 a_color;
+
+
+			uniform mat4 u_projection;
+			uniform mat4 u_view;
+			uniform mat4 u_world;
+			uniform mat4 u_textureMatrix;
+
+			varying vec2 v_texcoord;
+			varying vec4 v_projectedTexcoord;
+			varying vec3 v_normal;
+			varying vec4 v_color;
+
+			void main() {
+				// Multiply the position by the matrix.
+				vec4 worldPosition = u_world * a_position;
+
+				gl_Position = u_projection * u_view * worldPosition;
+
+				// Pass the texture coord to the fragment shader.
+				v_texcoord = a_texcoord;
+
+				v_projectedTexcoord = u_textureMatrix * worldPosition;
+
+				// orient the normals and pass to the fragment shader
+				v_normal = mat3(u_world) * a_normal;
+
+				v_color = a_color;
+			}
+		</script>
+		<script  id="fragment-shader-3d" type="x-shader/x-fragment">
+			precision mediump float;
+
+			// Passed in from the vertex shader.
+			varying vec2 v_texcoord;
+			varying vec4 v_projectedTexcoord;
+			varying vec3 v_normal;
+			varying vec4 v_color;
+
+			uniform vec4 u_colorMult;
+			uniform sampler2D u_texture;
+			uniform sampler2D u_projectedTexture;
+			uniform float u_bias;
+			uniform vec3 u_reverseLightDirection;
+
+			// Material Properties
+			uniform sampler2D diffuseMap;
+			uniform sampler2D normalMap;
+			uniform vec3 diffuse;
+			uniform vec3 ambient;
+			uniform vec3 emissive;
+			uniform vec3 specular;
+			uniform float shininess;
+			uniform float opacity;
+
+			void main() {
+				// because v_normal is a varying it's interpolated
+				// so it will not be a unit vector. Normalizing it
+				// will make it a unit vector again
+				vec3 normal = normalize(v_normal);
+
+				float light = dot(normal, u_reverseLightDirection);
+
+				vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+				float currentDepth = projectedTexcoord.z + u_bias;
+
+				bool inRange =
+				projectedTexcoord.x >= 0.0 &&
+				projectedTexcoord.x <= 1.0 &&
+				projectedTexcoord.y >= 0.0 &&
+				projectedTexcoord.y <= 1.0;
+
+				// the 'r' channel has the depth values
+				float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
+				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+
+				vec4 diffuseMapColor = texture2D(diffuseMap, v_texcoord);
+    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb  * v_color.rgb;
+    			float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
+
+				vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
+
+				gl_FragColor = vec4(
+					effectiveDiffuse.rgb * light * shadowLight,
+					effectiveOpacity);
+			}
+		</script>
+
+
+		<script  id="color-vertex-shader" type="x-shader/x-vertex">
+			attribute vec4 a_position;
+
+			uniform mat4 u_projection;
+			uniform mat4 u_view;
+			uniform mat4 u_world;
+
+			void main() {
+				// Multiply the position by the matrices.
+				gl_Position = u_projection * u_view * u_world * a_position;
+			}
+		</script>
+		<script  id="color-fragment-shader" type="x-shader/x-fragment">
+			precision mediump float;
+
+			uniform vec4 u_color;
+			void main() {
+				gl_FragColor = u_color;
+			}
+		</script>
+
+
+	</head>
+
+	<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div id="canvas_column" class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9">
+				<canvas id="canvas"></canvas>
+			</div>
+			<div id="camera_column" class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+				<canvas id="camera"></canvas>
+			</div>
+		</div>
+	</div>
+
+	</body>
+
+</html>
