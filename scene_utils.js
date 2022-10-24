@@ -147,10 +147,12 @@ function draw() {
     }
 
     if(shadow.enable){
-        // console log the search of the mesh that has obj = "./objects/sun/sun.obj"
-        //console.log(meshes.find(mesh => mesh.obj_source === "./objects/sun/sun.obj").position);
-        //light = {position: [0,5,18],direction : [1,1,1], color : [1.0, 1.0, 1.0], ambient: [0.1,0.1,0.1] };
-        //console.log(window["light"].position);
+        angle = angle === -90 ? 90 : angle-0.5;
+
+        let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
+        let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
+        light.position = [x, y, sunPosition[2]];
+
         const lightWorldMatrix = m4.lookAt(
             light.position,       // position
             light.direction,      // target

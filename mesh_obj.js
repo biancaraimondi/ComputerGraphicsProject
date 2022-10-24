@@ -15,7 +15,7 @@ class MeshObj {
             this.angle = 0;
             light.position = position;
         }
-        this.angle = 90;
+        this.angle = angle;
         //this.anticlockwise = 1;
 
         this.ready = false;
@@ -83,12 +83,20 @@ class MeshObj {
         let u_world = m4.identity()
 
         if (this.rotate === true && uniforms.u_textureMatrix !== m4.identity() ){
-            u_world = m4.zRotate(u_world, degToRad(this.angle));
-            console.log("1: " + light.position);
-            console.log("angle: " + degToRad(this.angle));
-            console.log("m4: " + m4.zRotate(/*light.position*/u_world, degToRad(this.angle)));
-            light.position = m4.zRotate(/*light.position*/u_world, degToRad(this.angle));
-            console.log("2: " + light.position);
+            u_world = m4.zRotate(u_world, degToRad(angle));
+            //console.log("sun position: " + meshes[3].position);
+            //console.log("angle: " + degToRad(this.angle));*/
+
+
+
+
+/*
+            const mat = m4.identity();
+            m4.translation([0, 5, 18], mat);
+            light.position = m4.zRotate(mat, degToRad(this.angle));
+            console.log("light position: " + light.position);
+*/
+            //console.log("2: " + light.position);
             //console.log(window.light.position)
             /*
             //sole che rimbalza e torna indietro
@@ -98,7 +106,7 @@ class MeshObj {
                 this.anticlockwise = 1;
             this.angle += this.anticlockwise;
              */
-            this.angle = this.angle === -90 ? 90 : this.angle-0.5;
+            //angle = angle === -90 ? 90 : angle-0.5;
         }
 
         for (const {bufferInfo, material} of this.mesh.parts) {

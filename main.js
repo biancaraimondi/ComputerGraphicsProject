@@ -1,4 +1,5 @@
 window["light"] = [];
+window["angle"] = 90;
 let shadow = [];
 
 let canvas = document.getElementById("canvas");
@@ -30,6 +31,7 @@ prepareShadows();
 
 let meshes = []; // Array used to store all the mesh used in the scene
 load_mesh_json();
+window["sunPosition"] = meshes[3].position;
 
 // Creating a camera for this scene
 const position = [0,5,18], target = [0, 0, 0], up = [0, 1, 0];
