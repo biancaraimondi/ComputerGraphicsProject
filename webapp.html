@@ -80,12 +80,6 @@
 			void main () {
 				vec3 normal = normalize(v_normal) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
 
-				vec3 surfaceToViewDirection = normalize(v_surfaceToView);
-    			vec3 halfVector = normalize(u_lightDirection + surfaceToViewDirection);
-
-				float fakeLight = dot(u_lightDirection, normal) * .5 + .5;
-    			float specularLight = clamp(dot(normal, halfVector), 0.0, 1.0);
-
     			vec4 diffuseMapColor = texture2D(diffuseMap, v_texcoord);
     			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * u_lightColor.rgb * v_color.rgb;
     			float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
@@ -93,7 +87,7 @@
 				gl_FragColor = vec4(
 					emissive +
 					ambient * u_ambientLight +
-					effectiveDiffuse * fakeLight +
+					effectiveDiffuse +
 					specular * 0.01,
 					effectiveOpacity);
 			}
