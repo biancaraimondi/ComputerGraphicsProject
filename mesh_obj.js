@@ -92,7 +92,6 @@ class MeshObj {
                 this.anticlockwise = 1;
             this.angle += this.anticlockwise;
              */
-            //angle = angle === -90 ? 90 : angle-0.5;
         }
 
         for (const {bufferInfo, material} of this.mesh.parts) {

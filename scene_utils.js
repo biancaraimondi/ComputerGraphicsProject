@@ -180,7 +180,20 @@ function draw() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         meshes.forEach(m => {
-            m.render(gl, colorProgramInfo, sharedUniforms);
+            if(m === meshes[3]){
+                sharedUniforms = {
+                    u_ambientLight: light.ambient,                      // Ambient
+                    u_lightDirection: m4.normalize(light.direction),    // Light Direction
+                    u_lightColor: light.color,                          // Light Color
+                    u_view: camera.getViewMatrix(),                     // View Matrix
+                    u_projection: projectionMatrix(),                   // Projection Matrix
+                    u_viewWorldPosition: camera.getPosition(),          // Camera position
+                    u_lightPosition: (light.position),
+                };
+                m.render(gl, program, sharedUniforms);
+            } else {
+                m.render(gl, colorProgramInfo, sharedUniforms);
+            }
         });
 
         bindFrameBufferNull()
@@ -209,54 +222,21 @@ function draw() {
         };
 
         meshes.forEach(m => {
-            m.render(gl, textureProgramInfo, sharedUniforms);
+            if(m === meshes[3]){
+                sharedUniforms = {
+                    u_ambientLight: light.ambient,                      // Ambient
+                    u_lightDirection: m4.normalize(light.direction),    // Light Direction
+                    u_lightColor: light.color,                          // Light Color
+                    u_view: camera.getViewMatrix(),                     // View Matrix
+                    u_projection: projectionMatrix(),                   // Projection Matrix
+                    u_viewWorldPosition: camera.getPosition(),          // Camera position
+                    u_lightPosition: (light.position),
+                };
+                m.render(gl, program, sharedUniforms);
+            } else {
+                m.render(gl, textureProgramInfo, sharedUniforms);
+            }
         });
-
-        /*if (shadow.showFrustum){
-            gl.useProgram(colorProgramInfo.program);
-            const cubeLinesBufferInfo = webglUtils.createBufferInfoFromArrays(gl, {
-                position: [
-                    -1, -1, -1,
-                    1, -1, -1,
-                    -1,  1, -1,
-                    1,  1, -1,
-                    -1, -1,  1,
-                    1, -1,  1,
-                    -1,  1,  1,
-                    1,  1,  1,
-                ],
-                indices: [
-                    0, 1,
-                    1, 3,
-                    3, 2,
-                    2, 0,
-
-                    4, 5,
-                    5, 7,
-                    7, 6,
-                    6, 4,
-
-                    0, 4,
-                    1, 5,
-                    3, 7,
-                    2, 6,
-                ],
-            });
-
-            webglUtils.setBuffersAndAttributes(gl, colorProgramInfo, cubeLinesBufferInfo);
-
-            const mat = m4.multiply(
-                lightWorldMatrix, m4.inverse(lightProjectionMatrix));
-
-            webglUtils.setUniforms(colorProgramInfo, {
-                u_color: [1, 1, 1, 1],
-                u_view: view,
-                u_projection: proj,
-                u_world: mat,
-            });
-
-            webglUtils.drawBufferInfo(gl, cubeLinesBufferInfo, gl.LINES);
-        }*/
 
     }else{
         bindFrameBufferNull()
