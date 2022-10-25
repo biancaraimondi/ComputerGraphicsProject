@@ -84,20 +84,6 @@ class MeshObj {
 
         if (this.rotate === true && uniforms.u_textureMatrix !== m4.identity() ){
             u_world = m4.zRotate(u_world, degToRad(angle));
-            //console.log("sun position: " + meshes[3].position);
-            //console.log("angle: " + degToRad(this.angle));*/
-
-
-
-
-/*
-            const mat = m4.identity();
-            m4.translation([0, 5, 18], mat);
-            light.position = m4.zRotate(mat, degToRad(this.angle));
-            console.log("light position: " + light.position);
-*/
-            //console.log("2: " + light.position);
-            //console.log(window.light.position)
             /*
             //sole che rimbalza e torna indietro
             if(this.angle === 90)

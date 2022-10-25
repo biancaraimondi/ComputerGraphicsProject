@@ -1,6 +1,6 @@
 window["light"] = [];
 window["angle"] = 90;
-let shadow = [];
+window["shadow"] = [];
 
 let canvas = document.getElementById("canvas");
 let gl = canvas.getContext("webgl");

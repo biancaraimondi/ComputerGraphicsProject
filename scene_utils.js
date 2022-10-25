@@ -9,7 +9,7 @@ function load_mesh_json(){
     pushMesh("./objects/umbrella/umbrella.obj", "./objects/umbrella/umbrella.mtl", [0, 0, 0], false);
     pushMesh("./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [3, 0, 0], false);
     pushMesh("./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [-3, 0, 0], false);
-    pushMesh("./objects/sun/sun.obj", "./objects/sun/sun.mtl", [0, 9, 0], true);
+    pushMesh("./objects/sun/sun.obj", "./objects/sun/sun.mtl", [0, 12, 0], true);
     pushMesh("./objects/sand/sand.obj", "./objects/sand/sand.mtl", [0, 0, 0], false);
     pushMesh("./objects/secchiello/secchiello.obj", "./objects/secchiello/secchiello.mtl", [-1, 0, 5], false);
     pushMesh("./objects/castello/castello.obj", "./objects/castello/castello.mtl", [-2, 0, 5], false);
@@ -87,7 +87,7 @@ function prepareShadows(){
 
     // Shadow map texture
     shadow.depthTexture = gl.createTexture();
-    shadow.depthTextureSize = 4096; // Texture resolution
+    shadow.depthTextureSize = 8192; // Texture resolution
     gl.bindTexture(gl.TEXTURE_2D, shadow.depthTexture);
     gl.texImage2D(
         gl.TEXTURE_2D,                 // target
@@ -115,7 +115,7 @@ function prepareShadows(){
 
     // Shadow settings
     shadow.enable = true;
-    shadow.fov = 60;
+    shadow.fov = 100;
     shadow.projWidth = 2;
     shadow.projHeight = 2;
     shadow.zFarProj = 20;
@@ -205,6 +205,7 @@ function draw() {
             u_projectedTexture: shadow.depthTexture,
             u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
             u_worldCameraPosition: camera.getPosition(),
+            u_lightPosition: light.position,
         };
 
         meshes.forEach(m => {
