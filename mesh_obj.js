@@ -1,17 +1,16 @@
 class MeshObj {
 
-    constructor(obj, mtl, position, rotate, gl) {
-        this.obj_source = obj;   // Path to obj file
-        this.mtl_source = mtl;   // Path to mtl file
-        this.position = position;       // Where to move the mesh once loaded
+    constructor(name, obj, mtl, position, gl) {
+        this.name = name;
+        this.obj = obj;   // Path to obj file
+        this.mtl = mtl;   // Path to mtl file
+        this.position = position;
 
         this.mesh = [];                         // This object stores all the mesh information
-        this.mesh.sourceMesh = this.obj_source; // .sourceMesh is used in load_mesh.js
-        this.mesh.fileMTL = this.mtl_source;    // .fileMTL is used in load_mesh.js
+        this.mesh.sourceMesh = this.obj; // .sourceMesh is used in load_mesh.js
+        this.mesh.fileMTL = this.mtl;    // .fileMTL is used in load_mesh.js
 
-        this.rotate = rotate;
-        if (rotate === true) {
-            this.rotate = rotate;
+        if (this.name === "sun") {
             light.position = position;
         }
 
@@ -79,7 +78,7 @@ class MeshObj {
         // compute the world matrix
         let u_world = m4.identity()
 
-        if (this.rotate === true && uniforms.u_textureMatrix !== m4.identity() ){
+        if (this.name === "sun" && uniforms.u_textureMatrix !== m4.identity() ){
             u_world = m4.zRotate(u_world, degToRad(angle));
         }
 

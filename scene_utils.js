@@ -1,18 +1,18 @@
-function pushMesh(obj, mtl, position, rotate){
-    let mesh = new MeshObj(obj, mtl, position, rotate, gl);
+function pushMesh(name, obj, mtl, position){
+    let mesh = new MeshObj(name, obj, mtl, position, gl);
     meshes.push(mesh);
 }
 
 // and then creates all the  mesh objects that will be used.
 function load_mesh_json(){
     // Load all objects in ./objects folder
-    pushMesh("./objects/umbrella/umbrella.obj", "./objects/umbrella/umbrella.mtl", [0, 0, 0], false);
-    pushMesh("./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [3, 0, 0], false);
-    pushMesh("./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [-3, 0, 0], false);
-    pushMesh("./objects/sun/sun.obj", "./objects/sun/sun.mtl", [0, 12, 0], true);
-    pushMesh("./objects/sand/sand.obj", "./objects/sand/sand.mtl", [0, 0, 0], false);
-    pushMesh("./objects/secchiello/secchiello.obj", "./objects/secchiello/secchiello.mtl", [-1, 0, 4], false);
-    pushMesh("./objects/castello/castello.obj", "./objects/castello/castello.mtl", [-2, 0, 4], false);
+    pushMesh("umbrella", "./objects/umbrella/umbrella.obj", "./objects/umbrella/umbrella.mtl", [0, 0, 0]);
+    pushMesh("lettino_dx", "./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [3, 0, 0]);
+    pushMesh("lettino_sx","./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [-3, 0, 0]);
+    pushMesh("sun", "./objects/sun/sun.obj", "./objects/sun/sun.mtl", [0, 12, 0]);
+    pushMesh("sand", "./objects/sand/sand.obj", "./objects/sand/sand.mtl", [0, 0, 0]);
+    pushMesh("secchiello", "./objects/secchiello/secchiello.obj", "./objects/secchiello/secchiello.mtl", [-1, 0, 4]);
+    pushMesh("castello", "./objects/castello/castello.obj", "./objects/castello/castello.mtl", [-2, 0, 4]);
 }
 
 // Compute the projection matrix
@@ -135,7 +135,6 @@ function draw() {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clearColor(1, light.color[1], light.color[2], 1);
-        //gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
@@ -148,18 +147,21 @@ function draw() {
     angle += anticlockwise;
      */
 
+    // sun movement editing the angle
     angle = angle === -55 ? 55 : angle-0.5;
 
     let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
     let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
+    // set the light position based on the sun position
     light.position = [x, y, sunPosition[2]];
+    // set the light color based on the angle of the sun
     light.color = [1, 1-(0.999*(Math.abs(angle)/90)-0.2), 1-(0.999*(Math.abs(angle)/90))];
 
 
     const lightWorldMatrix = m4.lookAt(
-        light.position,       // position
-        light.direction,      // target
-        [0, 1, 0],                  // up
+        light.position,     // position
+        light.direction,    // target
+        [0, 1, 0],          // up
     );
 
     const lightProjectionMatrix = m4.perspective(
@@ -183,7 +185,8 @@ function draw() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     meshes.forEach(m => {
-        if(m !== meshes[3] && m !== meshes[4])
+        // if the mesh is not the sun nor the sand, compute the shadow
+        if(m.name !== "sun" && m.name !== "sun")
             m.render(gl, colorProgramInfo, sharedUniforms);
     });
 
@@ -214,7 +217,8 @@ function draw() {
     };
 
     meshes.forEach(m => {
-        if(m === meshes[3]){
+        // if the mesh is the sun do not draw the shadow on it
+        if(m.name === "sun"){
             sharedUniforms = {
                 u_ambientLight: light.ambient,                      // Ambient
                 u_lightDirection: m4.normalize(light.direction),    // Light Direction
