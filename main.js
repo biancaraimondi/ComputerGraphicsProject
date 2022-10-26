@@ -1,3 +1,8 @@
+// declaration of global variables
+// @light is the light source
+// @angle is the angle of the light source (the sun)
+// @shadow is for shadow settings
+// @anticlockwise is used for the inverse rotation of the sun
 window["light"] = [];
 window["angle"] = 55;
 window["shadow"] = [];
@@ -34,10 +39,12 @@ let meshes = []; // Array used to store all the mesh used in the scene
 load_mesh_json();
 window["sunPosition"] = meshes[3].position;
 
-// Creating a camera for this scene
+// @position is the position of the camera
+// @target is the target of the camera
+// @up is the up vector of the camera
 const position = [0,6,18], target = [0, 7, 0], up = [0, 1, 0];
-let camera = new Camera(position, target, up);
-let keys = {};
+window["camera"] = new Camera(position, target, up);
+window["keys"] = {};
 
 // Light used in the scene
 light = {position: [0,5,18],direction : [1,1,1], color : [1.0, 1.0, 1.0], ambient: [0.1,0.1,0.1] };

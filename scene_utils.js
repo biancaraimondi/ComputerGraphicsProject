@@ -74,7 +74,6 @@ function key_controller(){
     }
 }
 
-// Create a
 function prepareShadows(){
     // Program used to draw from the light perspective
     colorProgramInfo = webglUtils.createProgramInfo(gl, ['color-vertex-shader', 'color-fragment-shader']);
@@ -114,8 +113,7 @@ function prepareShadows(){
     shadow.projWidth = 2;
     shadow.projHeight = 2;
     shadow.zFarProj = 20;
-    shadow.bias = -0.0001;
-    shadow.showFrustum = false;
+    shadow.bias = -0.006;
 }
 
 // Draw everything in the scene on the canvas.
