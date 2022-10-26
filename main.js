@@ -35,14 +35,12 @@ load_mesh_json();
 window["sunPosition"] = meshes[3].position;
 
 // Creating a camera for this scene
-const position = [0,5,20], target = [0, 8, 0], up = [0, 1, 0];
+const position = [0,6,18], target = [0, 7, 0], up = [0, 1, 0];
 let camera = new Camera(position, target, up);
 let keys = {};
 
 // Light used in the scene
 light = {position: [0,5,18],direction : [1,1,1], color : [1.0, 1.0, 1.0], ambient: [0.1,0.1,0.1] };
-
-
 
 function main(){
     // Adding event listener for keyboard

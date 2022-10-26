@@ -136,7 +136,8 @@ function draw() {
         // draw scene to the canvas projecting the depth texture into the scene
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(1, 1, 1, 1);
+        gl.clearColor(1, light.color[1], light.color[2], 1);
+        //gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
@@ -154,7 +155,7 @@ function draw() {
     let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
     let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
     light.position = [x, y, sunPosition[2]];
-    light.color = [1, 1-(0.999*(Math.abs(angle)/90)), 1-(0.999*(Math.abs(angle)/90))];
+    light.color = [1, 1-(0.999*(Math.abs(angle)/90)-0.2), 1-(0.999*(Math.abs(angle)/90))];
 
 
     const lightWorldMatrix = m4.lookAt(
