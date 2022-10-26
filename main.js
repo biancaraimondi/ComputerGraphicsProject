@@ -6,6 +6,8 @@
 window["light"] = [];
 window["angle"] = 55;
 window["shadow"] = [];
+window["green"] = 0.48;
+window["blue"] = 0.2;
 //window["anticlockwise"] = 1;
 
 let canvas = document.getElementById("canvas");

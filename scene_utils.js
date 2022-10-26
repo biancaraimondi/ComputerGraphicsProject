@@ -155,7 +155,19 @@ function draw() {
     // set the light position based on the sun position
     light.position = [x, y, sunPosition[2]];
     // set the light color based on the angle of the sun
-    light.color = [1, 1-(0.999*(Math.abs(angle)/90)-0.2), 1-(0.999*(Math.abs(angle)/90))];
+
+    // 255, 123-234, 0
+    /*
+    let green = 1-(0.999*(Math.abs(angle)/90)-0.2);
+    let blue = 1-(0.999*(Math.abs(angle)/90));
+*/
+
+    // 0.48 scuro - 0.91 chiaro
+    let stepGreen = (0.91-0.48)/90;
+    let stepBlue = (1-0.2)/90;
+    green = (angle > 0) ? green + stepGreen : green - stepGreen;
+    blue = (angle > 0) ? blue + stepBlue : blue - stepBlue;
+    light.color = [1, green, blue];
 
 
     const lightWorldMatrix = m4.lookAt(
