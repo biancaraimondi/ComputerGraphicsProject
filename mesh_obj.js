@@ -12,11 +12,8 @@ class MeshObj {
         this.rotate = rotate;
         if (rotate === true) {
             this.rotate = rotate;
-            this.angle = 0;
             light.position = position;
         }
-        this.angle = angle;
-        //this.anticlockwise = 1;
 
         this.ready = false;
 
@@ -84,14 +81,6 @@ class MeshObj {
 
         if (this.rotate === true && uniforms.u_textureMatrix !== m4.identity() ){
             u_world = m4.zRotate(u_world, degToRad(angle));
-            /*
-            //sole che rimbalza e torna indietro
-            if(this.angle === 90)
-                this.anticlockwise = -1;
-            else if(this.angle === -90)
-                this.anticlockwise = 1;
-            this.angle += this.anticlockwise;
-             */
         }
 
         for (const {bufferInfo, material} of this.mesh.parts) {

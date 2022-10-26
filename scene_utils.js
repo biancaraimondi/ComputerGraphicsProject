@@ -11,8 +11,8 @@ function load_mesh_json(){
     pushMesh("./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [-3, 0, 0], false);
     pushMesh("./objects/sun/sun.obj", "./objects/sun/sun.mtl", [0, 12, 0], true);
     pushMesh("./objects/sand/sand.obj", "./objects/sand/sand.mtl", [0, 0, 0], false);
-    pushMesh("./objects/secchiello/secchiello.obj", "./objects/secchiello/secchiello.mtl", [-1, 0, 5], false);
-    pushMesh("./objects/castello/castello.obj", "./objects/castello/castello.mtl", [-2, 0, 5], false);
+    pushMesh("./objects/secchiello/secchiello.obj", "./objects/secchiello/secchiello.mtl", [-1, 0, 4], false);
+    pushMesh("./objects/castello/castello.obj", "./objects/castello/castello.mtl", [-2, 0, 4], false);
 }
 
 // Compute the projection matrix
@@ -76,9 +76,6 @@ function key_controller(){
 
 // Create a
 function prepareShadows(){
-    // Obj containing all variables used for shadows
-    shadow = [];
-
     // Program used to draw from the light perspective
     colorProgramInfo = webglUtils.createProgramInfo(gl, ['color-vertex-shader', 'color-fragment-shader']);
 
@@ -87,7 +84,7 @@ function prepareShadows(){
 
     // Shadow map texture
     shadow.depthTexture = gl.createTexture();
-    shadow.depthTextureSize = 8192; // Texture resolution
+    shadow.depthTextureSize = 4096; // Texture resolution
     gl.bindTexture(gl.TEXTURE_2D, shadow.depthTexture);
     gl.texImage2D(
         gl.TEXTURE_2D,                 // target
@@ -113,9 +110,7 @@ function prepareShadows(){
         shadow.depthTexture,       // texture
         0);                       // mip level
 
-    // Shadow settings
-    shadow.enable = true;
-    shadow.fov = 100;
+    shadow.fov = 80;
     shadow.projWidth = 2;
     shadow.projHeight = 2;
     shadow.zFarProj = 20;
@@ -136,125 +131,105 @@ function draw() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     let proj = projectionMatrix()
-    let view = camera.getViewMatrix()
 
     function bindFrameBufferNull(){
         // draw scene to the canvas projecting the depth texture into the scene
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(1, 1, 0, 1);
+        gl.clearColor(1, 1, 1, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
-    if(shadow.enable){
-        angle = angle === -90 ? 90 : angle-0.5;
+    /*
+    //sole che rimbalza e torna indietro
+    if(angle === 90)
+        anticlockwise = -1;
+    else if(angle === -90)
+        anticlockwise = 1;
+    angle += anticlockwise;
+     */
 
-        let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
-        let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
-        light.position = [x, y, sunPosition[2]];
+    angle = angle === -55 ? 55 : angle-0.5;
 
-        const lightWorldMatrix = m4.lookAt(
-            light.position,       // position
-            light.direction,      // target
-            [0, 1, 0],                  // up
-        );
-
-        const lightProjectionMatrix = m4.perspective(
-            degToRad(shadow.fov),
-            shadow.projWidth / shadow.projHeight,
-            0.5,                        // near
-            shadow.zFarProj);     // far
-
-        let sharedUniforms = {
-            u_view: m4.inverse(lightWorldMatrix),                  // View Matrix
-            u_projection: lightProjectionMatrix,                   // Projection Matrix
-            u_bias: shadow.bias,
-            u_textureMatrix: m4.identity(),
-            u_projectedTexture: shadow.depthTexture,
-            u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
-        };
-
-        // draw to the depth texture
-        gl.bindFramebuffer(gl.FRAMEBUFFER, shadow.depthFramebuffer);
-        gl.viewport(0, 0, shadow.depthTextureSize, shadow.depthTextureSize);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        meshes.forEach(m => {
-            if(m === meshes[3]){
-                sharedUniforms = {
-                    u_ambientLight: light.ambient,                      // Ambient
-                    u_lightDirection: m4.normalize(light.direction),    // Light Direction
-                    u_lightColor: light.color,                          // Light Color
-                    u_view: camera.getViewMatrix(),                     // View Matrix
-                    u_projection: projectionMatrix(),                   // Projection Matrix
-                    u_viewWorldPosition: camera.getPosition(),          // Camera position
-                    u_lightPosition: (light.position),
-                };
-                m.render(gl, program, sharedUniforms);
-            } else {
-                m.render(gl, colorProgramInfo, sharedUniforms);
-            }
-        });
-
-        bindFrameBufferNull()
-
-        let textureMatrix = m4.identity();
-        textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
-        textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
-        textureMatrix = m4.multiply(textureMatrix, lightProjectionMatrix);
-        // use the inverse of this world matrix to make
-        // a matrix that will transform other positions
-        // to be relative this world space.
-        textureMatrix = m4.multiply(
-            textureMatrix,
-            m4.inverse(lightWorldMatrix));
+    let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
+    let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
+    light.position = [x, y, sunPosition[2]];
+    light.color = [1, 1-(0.999*(Math.abs(angle)/90)), 1-(0.999*(Math.abs(angle)/90))];
 
 
-        sharedUniforms = {
-            u_view: camera.getViewMatrix(),
-            u_projection: proj,
-            u_bias: shadow.bias,
-            u_textureMatrix: textureMatrix,
-            u_projectedTexture: shadow.depthTexture,
-            u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
-            u_worldCameraPosition: camera.getPosition(),
-            u_lightPosition: light.position,
-        };
+    const lightWorldMatrix = m4.lookAt(
+        light.position,       // position
+        light.direction,      // target
+        [0, 1, 0],                  // up
+    );
 
-        meshes.forEach(m => {
-            if(m === meshes[3]){
-                sharedUniforms = {
-                    u_ambientLight: light.ambient,                      // Ambient
-                    u_lightDirection: m4.normalize(light.direction),    // Light Direction
-                    u_lightColor: light.color,                          // Light Color
-                    u_view: camera.getViewMatrix(),                     // View Matrix
-                    u_projection: projectionMatrix(),                   // Projection Matrix
-                    u_viewWorldPosition: camera.getPosition(),          // Camera position
-                    u_lightPosition: (light.position),
-                };
-                m.render(gl, program, sharedUniforms);
-            } else {
-                m.render(gl, textureProgramInfo, sharedUniforms);
-            }
-        });
+    const lightProjectionMatrix = m4.perspective(
+        degToRad(shadow.fov),
+        shadow.projWidth / shadow.projHeight,
+        0.5,                        // near
+        shadow.zFarProj);     // far
 
-    }else{
-        bindFrameBufferNull()
+    let sharedUniforms = {
+        u_view: m4.inverse(lightWorldMatrix),                  // View Matrix
+        u_projection: lightProjectionMatrix,                   // Projection Matrix
+        u_bias: shadow.bias,
+        u_textureMatrix: m4.identity(),
+        u_projectedTexture: shadow.depthTexture,
+        u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
+    };
 
-        const sharedUniforms = {
-            u_ambientLight: light.ambient,                      // Ambient
-            u_lightDirection: m4.normalize(light.direction),    // Light Direction
-            u_lightColor: light.color,                          // Light Color
-            u_view: camera.getViewMatrix(),                     // View Matrix
-            u_projection: projectionMatrix(),                   // Projection Matrix
-            u_viewWorldPosition: camera.getPosition(),          // Camera position
-            u_lightPosition: (light.position),
-        };
+    // draw to the depth texture
+    gl.bindFramebuffer(gl.FRAMEBUFFER, shadow.depthFramebuffer);
+    gl.viewport(0, 0, shadow.depthTextureSize, shadow.depthTextureSize);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        meshes.forEach(m => {
+    meshes.forEach(m => {
+        if(m !== meshes[3] && m !== meshes[4])
+            m.render(gl, colorProgramInfo, sharedUniforms);
+    });
+
+    bindFrameBufferNull()
+
+    let textureMatrix = m4.identity();
+    textureMatrix = m4.translate(textureMatrix, 0.5, 0.5, 0.5);
+    textureMatrix = m4.scale(textureMatrix, 0.5, 0.5, 0.5);
+    textureMatrix = m4.multiply(textureMatrix, lightProjectionMatrix);
+    // use the inverse of this world matrix to make
+    // a matrix that will transform other positions
+    // to be relative this world space.
+    textureMatrix = m4.multiply(
+        textureMatrix,
+        m4.inverse(lightWorldMatrix));
+
+
+    sharedUniforms = {
+        u_view: camera.getViewMatrix(),
+        u_projection: proj,
+        u_bias: shadow.bias,
+        u_textureMatrix: textureMatrix,
+        u_projectedTexture: shadow.depthTexture,
+        u_reverseLightDirection: lightWorldMatrix.slice(8, 11),
+        u_worldCameraPosition: camera.getPosition(),
+        u_lightPosition: light.position,
+        u_lightColor: light.color,
+    };
+
+    meshes.forEach(m => {
+        if(m === meshes[3]){
+            sharedUniforms = {
+                u_ambientLight: light.ambient,                      // Ambient
+                u_lightDirection: m4.normalize(light.direction),    // Light Direction
+                u_lightColor: light.color,                          // Light Color
+                u_view: camera.getViewMatrix(),                     // View Matrix
+                u_projection: projectionMatrix(),                   // Projection Matrix
+                u_viewWorldPosition: camera.getPosition(),          // Camera position
+                u_lightPosition: (light.position),
+            };
             m.render(gl, program, sharedUniforms);
-        });
-    }
+        } else {
+            m.render(gl, textureProgramInfo, sharedUniforms);
+        }
+    });
 
     requestAnimationFrame(draw);
 }

@@ -7,7 +7,6 @@
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-		<!-- Libraries-->
 		<script src="libraries/dat.gui.js" defer></script>
 		<script src="libraries/glm_utils.js" defer></script>
 		<script src="libraries/jquery-3.6.0.js" defer></script>
@@ -81,7 +80,7 @@
 				vec3 normal = normalize(v_normal) * ( float( gl_FrontFacing ) * 2.0 - 1.0 );
 
     			vec4 diffuseMapColor = texture2D(diffuseMap, v_texcoord);
-    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * u_lightColor.rgb * v_color.rgb;
+    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * v_color.rgb;
     			float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
 
 				gl_FragColor = vec4(
@@ -92,32 +91,6 @@
 					effectiveOpacity);
 			}
 		</script>
-
-<!--
-		<script id="skybox-vertex-shader" type="x-shader/x-vertex">
-			attribute vec4 a_position;
-			varying vec4 v_position;
-
-			void main() {
-				v_position = a_position;
-				gl_Position = vec4(a_position.xy, 1, 1);
-			}
-		</script>
-		<script id="skybox-fragment-shader" type="x-shader/x-fragment">
-			precision mediump float;
-
-			uniform samplerCube u_skybox;
-			uniform mat4 u_viewDirectionProjectionInverse;
-
-			uniform vec3 u_lightColor;
-
-			varying vec4 v_position;
-			void main() {
-				vec4 t = u_viewDirectionProjectionInverse * v_position;
-				gl_FragColor = textureCube(u_skybox, normalize(t.xyz / t.w)) * vec4(u_lightColor,1);
-			}
-		</script>
--->
 
 		<script  id="vertex-shader-3d" type="x-shader/x-vertex">
 			attribute vec4 a_position;
@@ -173,6 +146,7 @@
 			uniform float u_bias;
 			uniform vec3 u_reverseLightDirection;
 			uniform vec3 u_lightPosition;
+			uniform vec3 u_lightColor;
 
 			// Material Properties
 			uniform sampler2D diffuseMap;
@@ -203,17 +177,15 @@
 
 				// the 'r' channel has the depth values
 				float projectedDepth = texture2D(u_projectedTexture, projectedTexcoord.xy).r;
-				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.4 : 1.5;
 
 				vec3 N = normal;
 				vec3 L = normalize(u_lightPosition - vertPos);
 
 				float lambertian = max(dot(N,L), 0.0);
 
-
-
 				vec4 diffuseMapColor = texture2D(diffuseMap, v_texcoord);
-    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb  * v_color.rgb;
+    			vec3 effectiveDiffuse = diffuse * diffuseMapColor.rgb * u_lightColor * v_color.rgb;
     			float effectiveOpacity = opacity * diffuseMapColor.a * v_color.a;
 
 				vec4 texColor = texture2D(u_texture, v_texcoord) * u_colorMult;
@@ -252,10 +224,10 @@
 	<body>
 	<div class="container-fluid">
 		<div class="row">
-			<div id="canvas_column" class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9">
+			<div id="canvas_column" class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
 				<canvas id="canvas"></canvas>
 			</div>
-			<div id="camera_column" class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+			<div id="camera_column" class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
 				<canvas id="camera"></canvas>
 			</div>
 		</div>

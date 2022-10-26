@@ -1,6 +1,7 @@
 window["light"] = [];
-window["angle"] = 90;
+window["angle"] = 55;
 window["shadow"] = [];
+//window["anticlockwise"] = 1;
 
 let canvas = document.getElementById("canvas");
 let gl = canvas.getContext("webgl");
@@ -34,7 +35,7 @@ load_mesh_json();
 window["sunPosition"] = meshes[3].position;
 
 // Creating a camera for this scene
-const position = [0,5,18], target = [0, 0, 0], up = [0, 1, 0];
+const position = [0,5,20], target = [0, 8, 0], up = [0, 1, 0];
 let camera = new Camera(position, target, up);
 let keys = {};
 
