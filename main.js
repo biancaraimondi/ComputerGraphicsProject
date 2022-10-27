@@ -6,8 +6,11 @@
 window["light"] = [];
 window["angle"] = 55;
 window["shadow"] = [];
-window["green"] = 0.48;
-window["blue"] = 0.2;
+window["objGreen"] = 0.48;
+window["objBlue"] = 0.2;
+window["skyRed"] = 0.7529; // 192/255 = 0.7529
+window["skyGreen"] = 0.5961; // 152/255 = 0.6
+window["skyBlue"] = 0.9608; // 245/255 = 0.9608
 //window["anticlockwise"] = 1;
 
 let canvas = document.getElementById("canvas");
