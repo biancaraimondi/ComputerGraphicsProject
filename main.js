@@ -19,7 +19,11 @@ gl.getExtension("OES_standard_derivatives");
 
 let cameraCanvas = document.getElementById('camera');
 ctx_camera = cameraCanvas.getContext('2d');
-makeCamera(700, 500);
+
+let cameraColumn = document.getElementById('camera_column');
+window["width"] = cameraColumn.getBoundingClientRect().width;
+window["height"] = cameraColumn.getBoundingClientRect().height;
+makeCamera(width, height);
 
 // Check if WebGL is supported
 if (!gl) {

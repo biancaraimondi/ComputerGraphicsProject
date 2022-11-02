@@ -1,12 +1,10 @@
-function makeCamera(width, height) {
+function makeCamera() {
     ctx_camera.canvas.width = width;
     ctx_camera.canvas.height = height;
     ctx_camera.font = "15px monospace";
 
     ctx_camera.fillStyle = "black";
-    ctx_camera.clearRect(0, 0, ctx_camera.canvas.width, ctx_camera.canvas.height);
-
-    ctx_camera.fillText("Camera PAD", 80, 330);
+    ctx_camera.clearRect(0, 0, width, height);
 
     drawButtons();
 
@@ -15,10 +13,10 @@ function makeCamera(width, height) {
 
 // draw buttons on canvas
 function drawButtons() {
-    ctx_camera.clearRect(0, 0, ctx_camera.canvas.width, ctx_camera.canvas.height);
-    ctx_camera.fillText("Change view", 80, 330);
+    ctx_camera.clearRect(0, 0, width, height);
+    //ctx_camera.fillText("Change view", 80, 330);
     ctx_camera.fillStyle = "orange";
-    ctx_camera.fillRect(115, 425, 40, 25);
+    ctx_camera.fillRect(width/2 - 20, 10, 40, 25);
     ctx_camera.fillRect(115, 355, 40, 25);
     ctx_camera.fillRect(148, 390, 40, 25);
     ctx_camera.fillRect(83, 390, 40, 25);
@@ -26,7 +24,7 @@ function drawButtons() {
     ctx_camera.fillRect(115, 460, 60, 25);
 
     ctx_camera.fillStyle = "black";
-    ctx_camera.fillText("D", 130, 440);
+    ctx_camera.fillText("D", width/2 + 15 - 20, 28);
     ctx_camera.fillText("U", 130, 370);
     ctx_camera.fillText("R", 163, 405);
     ctx_camera.fillText("L", 98, 405);
@@ -36,7 +34,7 @@ function drawButtons() {
     ctx_camera.canvas.addEventListener("click", function (e) {
         var x = e.offsetX - ctx_camera.canvas.offsetLeft;
         var y = e.offsetY - ctx_camera.canvas.offsetTop;
-        if (x > 115 && x < 155 && y > 425 && y < 450) {
+        if (x > (width/2 - 40) && x < (width/2 - 20 + 40) && y > 10 && y < 35) {
             camera.dolly(-0.1);
         }
         if (x > 115 && x < 155 && y > 355 && y < 380) {
