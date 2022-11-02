@@ -8,20 +8,59 @@ function makeCamera(width, height) {
 
     ctx_camera.fillText("Camera PAD", 80, 330);
 
-
-    makeKeyCanvas();
-
+    drawButtons();
 
     return ctx_camera.canvas;
 }
 
+// draw buttons on canvas
+function drawButtons() {
+    ctx_camera.clearRect(0, 0, ctx_camera.canvas.width, ctx_camera.canvas.height);
+    ctx_camera.fillText("Change view", 80, 330);
+    ctx_camera.fillStyle = "orange";
+    ctx_camera.fillRect(115, 425, 40, 25);
+    ctx_camera.fillRect(115, 355, 40, 25);
+    ctx_camera.fillRect(148, 390, 40, 25);
+    ctx_camera.fillRect(83, 390, 40, 25);
+
+    ctx_camera.fillRect(115, 460, 60, 25);
+
+    ctx_camera.fillStyle = "black";
+    ctx_camera.fillText("D", 130, 440);
+    ctx_camera.fillText("U", 130, 370);
+    ctx_camera.fillText("R", 163, 405);
+    ctx_camera.fillText("L", 98, 405);
+
+    ctx_camera.fillText("Reset", 120, 475);
+
+    ctx_camera.canvas.addEventListener("click", function (e) {
+        var x = e.offsetX - ctx_camera.canvas.offsetLeft;
+        var y = e.offsetY - ctx_camera.canvas.offsetTop;
+        if (x > 115 && x < 155 && y > 425 && y < 450) {
+            camera.dolly(-0.1);
+        }
+        if (x > 115 && x < 155 && y > 355 && y < 380) {
+            camera.dolly(0.1);
+        }
+        if (x > 148 && x < 188 && y > 390 && y < 415) {
+            camera.pan(-0.1);
+        }
+        if (x > 83 && x < 123 && y > 390 && y < 415) {
+            camera.pan(0.1);
+        }
+        if (x > 115 && x < 155 && y > 460 && y < 485) {
+            camera.align();
+        }
+    });
+}
+
+/*
 function makeKeyCanvas() {
     let buttons = [];
     buttons.push(makeButton(1, 115, 425, 30, 30, '↓', 'skyblue', 'gray', 'black', function () { camera.dolly(-0.1); }))
     buttons.push(makeButton(2, 115, 355, 30, 30, '↑', 'skyblue', 'gray', 'black', function () { camera.dolly(0.1); }))
     buttons.push(makeButton(3, 148, 390, 30, 30, '→', 'skyblue', 'gray', 'black', function () { camera.pan(0.1); }))
     buttons.push(makeButton(4, 83, 390, 30, 30, '←', 'skyblue', 'gray', 'black', function () { camera.pan(-0.1); }))
-    //buttons.push(makeButton(5, 180, 315, 50, 20, 'reset', 'skyblue', 'gray', 'black', function () { camera.align(); }))
 
     drawAll();
     cameraCanvas.addEventListener("click", function (e) {
@@ -37,9 +76,6 @@ function makeKeyCanvas() {
         if (ctx_camera.isPointInPath(buttons[3], e.offsetX, e.offsetY)) {
             camera.pan(0.1);
         }
-        /*if (ctx_camera.isPointInPath(buttons[4], e.offsetX, e.offsetY)) {
-            camera.getOriginalPosition();
-        }*/
     });
 
     cameraCanvas.addEventListener('touchstart', function (e) {
@@ -55,9 +91,6 @@ function makeKeyCanvas() {
         if (ctx_camera.isPointInPath(buttons[3], e.offsetX, e.offsetY)) {
             camera.pan(0.1);
         }
-        /*if (ctx_camera.isPointInPath(buttons[4], e.offsetX, e.offsetY)) {
-            camera.getOriginalPosition();
-        }*/
     });
 
 
@@ -104,3 +137,4 @@ function makeKeyCanvas() {
         }
     }
 }
+ */

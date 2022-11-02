@@ -1,6 +1,6 @@
 class Camera {
     constructor(pos, lookAt, up){
-        this.position = pos
+        this.position = pos;
         this.forward = m4.normalize(m4.subtractVectors(lookAt, pos));
         this.right = m4.normalize(m4.cross(this.forward, up));
         this.up = m4.normalize(m4.cross(this.right, this.forward));
@@ -71,9 +71,11 @@ class Camera {
 
     // Realign the camera
     align(){
-        this.up=[0,1,0];
-        this.forward[1] = 0;
-        this.right = m4.normalize(m4.cross(this.forward, this.up));
+        //pos = [0,6,18], lookAt = [0, 7, 0], up = [0, 1, 0]
+        this.position = [0,6,18]
+        this.forward = m4.normalize(m4.subtractVectors([0, 7, 0], [0,6,18]));
+        this.right = m4.normalize(m4.cross(this.forward, [0, 1, 0]));
+        this.up = m4.normalize(m4.cross(this.right, this.forward));
     }
 
     // Return the view matrix
