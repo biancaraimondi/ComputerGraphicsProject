@@ -27,9 +27,6 @@ function projectionMatrix(){
 function key_controller(){
     let step = 0.05;
 
-    if (keys["w"]){
-        camera.dolly(step)
-    }
     if (keys["s"]){
         camera.dolly(-step)
     }
@@ -41,21 +38,6 @@ function key_controller(){
     }
     if (keys["q"]){
         camera.pedestal(step)
-    }
-    if (keys["e"]){
-        camera.pedestal(-step)
-    }
-    if (keys["h"]){
-        camera.cant(-step)
-    }
-    if (keys["k"]){
-        camera.cant(step)
-    }
-    if (keys["u"]){
-        camera.pedestal(step)
-    }
-    if (keys["j"]){
-        camera.pedestal(-step)
     }
     if (keys["ArrowUp"]){
         camera.tilt(step)
