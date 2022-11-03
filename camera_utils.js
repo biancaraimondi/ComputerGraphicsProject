@@ -3,14 +3,11 @@ function makeCamera() {
     ctx_camera.canvas.height = height;
     ctx_camera.font = "15px monospace";
 
-    ctx_camera.clearRect(0, 0, width, height);
-
     drawButtons();
 
     return ctx_camera.canvas;
 }
 
-// draw buttons on canvas
 function drawButtons() {
     ctx_camera.clearRect(0, 0, width, height);
 
