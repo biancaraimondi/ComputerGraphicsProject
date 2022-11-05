@@ -4,7 +4,7 @@ function pushMesh(name, obj, mtl, position){
 }
 
 // and then creates all the  mesh objects that will be used.
-function load_mesh_json(){
+function load_mesh(){
     // Load all objects in ./objects folder
     pushMesh("umbrella", "./objects/umbrella/umbrella.obj", "./objects/umbrella/umbrella.mtl", [0, 0, 0]);
     pushMesh("lettino_dx", "./objects/lettino/lettino.obj", "./objects/lettino/lettino.mtl", [3, 0, 0]);
@@ -138,9 +138,9 @@ function draw() {
 
     /*
     //sole che rimbalza e torna indietro
-    if(angle === 90)
+    if(angle === 55)
         anticlockwise = -1;
-    else if(angle === -90)
+    else if(angle === -55)
         anticlockwise = 1;
     angle += anticlockwise;
      */

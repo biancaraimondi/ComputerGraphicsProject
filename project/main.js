@@ -45,7 +45,7 @@ let textureProgramInfo = webglUtils.createProgramInfo(gl, ['vertex-shader-3d', '
 prepareShadows();
 
 let meshes = []; // Array used to store all the mesh used in the scene
-load_mesh_json();
+load_mesh();
 window["sunPosition"] = meshes[3].position;
 
 // @position is the position of the camera

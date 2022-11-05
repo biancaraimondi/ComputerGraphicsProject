@@ -5,7 +5,6 @@ class Camera {
         this.right = m4.normalize(m4.cross(this.forward, up));
         this.up = m4.normalize(m4.cross(this.right, this.forward));
     }
-
     
     // Rotates a camera’s view up or down. 
     // You can tilt up or tilt down. 
@@ -28,18 +27,6 @@ class Camera {
 
         this.forward = m4.normalize(this.forward);
         this.right = m4.normalize(this.right);
-    }
-
-    // Tilts a camera sideways while maintaining its location and viewing direction.
-    // You can cant left and cant right.
-    // This is a rotation about a camera’s n axis.
-    cant(step){
-        let rotation = m4.axisRotation(this.forward, (step / 2));
-        this.right = m4.transformPoint(rotation, this.right)
-        this.up = m4.transformPoint(rotation, this.up)
-
-        this.right = m4.normalize(this.right);
-        this.up = m4.normalize(this.up);
     }
 
     // Moves a camera’s location laterally(left or right) while the camera’s direction of view is unchanged.
