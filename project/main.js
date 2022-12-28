@@ -3,26 +3,31 @@
 // @angle is the angle of the light source (the sun)
 // @shadow is for shadow settings
 // @anticlockwise is used for the inverse rotation of the sun
-window["light"] = [];
-window["angle"] = 55;
-window["shadow"] = [];
-window["objGreen"] = 0.48;
-window["objBlue"] = 0.2;
-window["skyRed"] = 0.7529; // 192/255 = 0.7529
-window["skyGreen"] = 0.5961; // 152/255 = 0.6
-window["skyBlue"] = 0.9608; // 245/255 = 0.9608
-//window["anticlockwise"] = 1;
+let light = [];
+let angle = 55;
+let shadow = [];
+let objGreen = 0.48;
+let objBlue = 0.2;
+let skyRed = 0.7529; // 192/255 = 0.7529
+let skyGreen = 0.5961; // 152/255 = 0.6
+let skyBlue = 0.9608; // 245/255 = 0.9608
+//let anticlockwise = 1;
 
 let canvas = document.getElementById("canvas");
 let gl = canvas.getContext("webgl");
 gl.getExtension("OES_standard_derivatives");
 
+let isDragging = false;
+let timeout = null;
+let isChecked = false;
 let cameraCanvas = document.getElementById('camera');
 ctx_camera = cameraCanvas.getContext('2d');
 
 let cameraColumn = document.getElementById('camera_column');
-window["width"] = cameraColumn.getBoundingClientRect().width;
-window["height"] = cameraColumn.getBoundingClientRect().height;
+let width = cameraColumn.getBoundingClientRect().width;
+let height = cameraColumn.getBoundingClientRect().height;
+// @sunStopped is used to stop the sun movement
+let sunStopped = false;
 makeCamera(width, height);
 
 // Check if WebGL is supported
