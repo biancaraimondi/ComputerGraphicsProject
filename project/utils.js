@@ -60,10 +60,18 @@ function add_touch_canvas(){
     canvas.onmousemove=mouseMove;
 }
 
+function setObjectsColorsBySun(){
+    // angle is between -55 and 55 degrees
+    // value is between 0 and 1
+    // if angle is -55, value is 0
+    // if angle is 55, value is 1
+    // if angle is 0, value is 0.5
+    // if angle is between -55 and 0, value is between 0 and 0.5
+    // if angle is between 0 and 55, value is between 0.5 and 1
+    let value = (angle >= 0) ? 1 - angle/55 : angle/-55;
+    setObjectsColors(value);
+}
 function setObjectsColors(value) {
-    //set angle between -55 and 55 degrees based on value
-    angle = 55 - (value * 110);
-
     //set objGreen between 0.91 and 0.48 based on value
     //if value is 0, objGreen is 0.48
     //if value is 1, objGreen is 0.48

@@ -13,83 +13,95 @@ function drawObjects(value) {
     drawBackground();
     drawButtons();
     drawSlider(value);
-    drawCheckBox();
 }
 
 function drawBackground() {
+    // Add the lightgrey background
     ctx_camera.fillStyle = "#d3d3d3";
     ctx_camera.fillRect(1, 0, width-30, height-10);
 }
 function drawButtons() {
     // Add a legend for the buttons
     ctx_camera.fillStyle = "black";
-    ctx_camera.fillText("Move camera", 20, 10);
+    ctx_camera.fillText("Move camera", 20, 20);
 
     // Add position of the buttons
     ctx_camera.fillStyle = "orange";
-    ctx_camera.fillRect(width/2 - 20, 10, 40, 25);
-    ctx_camera.fillRect(width/2 - 20, 85, 40, 25);
-    ctx_camera.fillRect(width/2 + 20, 45, 40, 25);
-    ctx_camera.fillRect(width/2 - 60, 45, 40, 25);
-    ctx_camera.fillRect(width/2 - 30, 135, 60, 25);
+    ctx_camera.fillRect(width/2 - 20, 30, 40, 25);
+    ctx_camera.fillRect(width/2 - 20, 105, 40, 25);
+    ctx_camera.fillRect(width/2 + 20, 65, 40, 25);
+    ctx_camera.fillRect(width/2 - 60, 65, 40, 25);
+    ctx_camera.fillRect(width/2 - 30, 155, 60, 25);
 
     // Add text to the buttons
     ctx_camera.fillStyle = "black";
-    ctx_camera.fillText("D", width/2 - 20 + 15, 28);
-    ctx_camera.fillText("U", width/2 - 20 + 15, 102);
-    ctx_camera.fillText("R", width/2 + 20 + 15, 45 + 17);
-    ctx_camera.fillText("L", width/2 - 60 + 15, 45 + 17);
-    ctx_camera.fillText("RESET", width/2 - 30 + 8, 135 + 15);
+    ctx_camera.fillText("D", width/2 - 20 + 15, 48);
+    ctx_camera.fillText("U", width/2 - 20 + 15, 122);
+    ctx_camera.fillText("R", width/2 + 20 + 15, 65 + 17);
+    ctx_camera.fillText("L", width/2 - 60 + 15, 65 + 17);
+    ctx_camera.fillText("RESET", width/2 - 30 + 8, 155 + 15);
 
 
     ctx_camera.canvas.addEventListener("click", function (e) {
         let x = e.offsetX - ctx_camera.canvas.offsetLeft;
         let y = e.offsetY - ctx_camera.canvas.offsetTop;
-        // if x is between width/2 - 20 and width/2 + 20 and y is between 10 and 35
-        if (x > (width/2 - 40) && x < (width/2 - 20 + 40) && y > 10 && y < 35) {
-            camera.dolly(-0.1);
+
+        // if the user clicked on the button with the text "D"
+        if (x > (width/2 - 20 - 15) && x < (width/2 - 20 + 40 - 15) && y > 30 && y < 30 + 25) {
+            console.log("Clicked on D");
+            camera.dolly(-0.05);
         }
-        if (x > (width/2 - 40) && x < (width/2 - 20 + 40) && y > 85 && y < 110) {
-            camera.dolly(0.1);
+        // if the user clicked on the button with the text "U"
+        if (x > (width/2 - 20 - 15) && x < (width/2 - 20 + 40 - 15) && y > 105 && y < 105 + 25) {
+            console.log("Clicked on U");
+            camera.dolly(0.05);
         }
-        if (x > (width/2 - 20) && x < (width/2 + 20) && y > 45 && y < 70) {
+        // if the user clicked on the button with the text "R"
+        if (x > (width/2 + 20 - 15) && x < (width/2 + 20 + 40 - 15) && y > 65 && y < 65 + 25) {
+            console.log("Clicked on R");
             camera.pan(-0.1);
         }
-        if (x > (width/2 + 20) && x < (width/2 + 40 + 20) && y > 45 && y < 70) {
+        // if the user clicked on the button with the text "L"
+        if (x > (width/2 - 60 - 15) && x < (width/2 - 60 + 40 - 15) && y > 65 && y < 65 + 25) {
+            console.log("Clicked on L");
             camera.pan(0.1, 0);
         }
-        if (x > (width/2 - 60) && x < (width/2 - 40) && y > 45 && y < 70) {
-            camera.pan(-0.1, 0);
-        }
-        if (x > (width/2 - 30) && x < (width/2 + 30) && y > 135 && y < 160) {
+        // if the user clicked on the button with the text "RESET"
+        if (x > (width/2 - 30 - 15) && x < (width/2 - 30 + 60 - 15) && y > 155 && y < 155 + 25) {
+            console.log("Clicked on RESET");
             camera.align();
+            angle = 55;
+            setObjectsColorsBySun();
+            sunStopped = false;
         }
     });
+
 }
 
 function drawSlider(value) {
     // Add a legend for the slider
     ctx_camera.fillStyle = "black";
-    ctx_camera.fillText("Move sun", 20, 180);
+    ctx_camera.fillText("Move sun", 20, 210);
 
     // Draw the slider track
-    ctx_camera.strokeStyle = "#ccc";
+    ctx_camera.fillStyle = "black";
+    ctx_camera.strokeStyle = "black";
     ctx_camera.lineWidth = 4;
     ctx_camera.lineCap = "round";
     ctx_camera.beginPath();
-    ctx_camera.moveTo(20, 200);
-    ctx_camera.lineTo(150, 200);
+    ctx_camera.moveTo(20, 230);
+    ctx_camera.lineTo(150, 230);
     ctx_camera.stroke();
 
     // Calculate the x position of the slider handle based on the value
     let x = 20 + (value * 130);
 
     // Draw the slider handle
-    ctx_camera.fillStyle = "#333";
-    ctx_camera.strokeStyle = "#fff";
+    ctx_camera.fillStyle = "black";
+    ctx_camera.strokeStyle = "black";
     ctx_camera.lineWidth = 2;
     ctx_camera.beginPath();
-    ctx_camera.arc(x, 200, 10, 0, 2 * Math.PI);
+    ctx_camera.arc(x, 230, 10, 0, 2 * Math.PI);
     ctx_camera.fill();
     ctx_camera.stroke();
 
@@ -100,7 +112,8 @@ function drawSlider(value) {
         let x = e.offsetX - ctx_camera.canvas.offsetLeft;
         let y = e.offsetY - ctx_camera.canvas.offsetTop;
         // If the user clicked on the slider handle, start tracking the mouse
-        if (Math.abs(x - value * 130 - 20) < 20 && Math.abs(y - 200) < 20) {
+        //if (Math.abs(x - value * 130 - 20) < 20 && Math.abs(y - 200) < 20) {
+        if ( x > (20 + value * 130 - 10 - 15) && x < (20 + value * 130 + 10 - 15) && y < 240 && y > 220) {
             isDragging = true;
             sunStopped = true;
         }
@@ -128,75 +141,15 @@ function drawSlider(value) {
 
                 // Clear the timeout
                 timeout = null;
-            }, 10);
+            }, 5);
         }
     });
 
     ctx_camera.canvas.addEventListener("mouseup", function (e) {
+        //set angle between -55 and 55 degrees based on value
+        angle = 55 - (value * 110);
         setObjectsColors(value);
         isDragging = false;
     });
 
 }
-
-function drawX(){
-    ctx_camera.fillStyle = "black";
-    ctx_camera.beginPath();
-    ctx_camera.moveTo(20, 250);
-    ctx_camera.lineTo(40, 270);
-    ctx_camera.moveTo(20, 270);
-    ctx_camera.lineTo(40, 250);
-    ctx_camera.stroke();
-}
-function drawCheckBox() {
-    // Add a label for the checkbox
-    ctx_camera.fillStyle = "black";
-    ctx_camera.fillText("Stop sun", 20, 240);
-
-    // Set the fill style for the checkbox
-    ctx_camera.fillStyle = "white";
-    ctx_camera.beginPath();
-    ctx_camera.rect(20, 250, 20, 20);
-    ctx_camera.fill();
-
-    /*// Draw the checkmark if the checkbox is checked
-    if (isChecked) {
-        drawX();
-    }
-
-
-    // Attach a click event listener to the canvas element
-    ctx_camera.canvas.addEventListener("click", function(event) {
-        // Get the coordinates of the mouse click relative to the canvas
-        let x = event.offsetX - ctx_camera.canvas.offsetLeft;
-        let y = event.offsetY - ctx_camera.canvas.offsetTop;
-
-        console.log(x, y);
-        // Check if the click was inside the checkbox
-        if (x >= 15 && x <= 40 && y >= 250 && y <= 270) {
-            console.log("Clicked on checkbox");
-            // The click was inside the checkbox, so toggle the checked state
-            isChecked = !isChecked;
-
-            // Redraw the checkbox with the updated state
-            /!*ctx_camera.fillStyle = "black";
-            ctx_camera.beginPath();
-            ctx_camera.rect(20, 20, 20, 20);
-            ctx_camera.fill();*!/
-            if (isChecked) {
-                drawX();
-            }
-
-            console.log("Checkbox is checked: " + isChecked);
-            sunStopped = true;
-            angle = 55;
-            objGreen = 0.48;
-            objBlue = 0.2;
-            skyRed = 0.7529; // 192/255 = 0.7529
-            skyGreen = 0.5961; // 152/255 = 0.6
-            skyBlue = 0.9608;
-        }
-    });*/
-}
-
-

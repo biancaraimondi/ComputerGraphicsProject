@@ -120,11 +120,11 @@ function draw() {
         // Step for red color: 149 to 192 -> 149/255 = 0.5843, 192/255 = 0.7529 -> 0.7529 - 0.5843 = 0.1686 -> 0.1686/55 = 0.0030
         // Step for green color: 170 to 152 -> 170/255 = 0.6667 , 152/255 = 0.6 -> 0.6667 - 0.6 = 0.0667 -> 0.0667/55 = 0.0012
         // Step for blue color: 250 to 245 -> 250/255 = 0.9804 , 245/255 = 0.96 -> 0.9804 - 0.96 = 0.0204 -> 0.0204/55 = 0.0004
-        if (!sunStopped){
+        /*if (!sunStopped){
             skyRed = (angle > 0) ? skyRed - 0.0030 : skyRed + 0.0030;
             skyGreen = (angle > 0) ? skyGreen + 0.0012 : skyGreen - 0.0012;
             skyBlue = (angle > 0) ? skyBlue + 0.0004 : skyBlue - 0.0004;
-        }
+        }*/
         gl.clearColor(skyRed, skyGreen, skyBlue, 1);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
@@ -151,10 +151,11 @@ function draw() {
     if (!sunStopped){
         if (angle === -55) {
             angle = 55;
-            setToInitialColors();
+            //setToInitialColors();
         } else {
             angle -= 0.5;
         }
+        setObjectsColorsBySun();
     }
 
     let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
@@ -164,10 +165,10 @@ function draw() {
     // set the light color based on the angle of the sun
     // Step for green color: 0.91 - 0.48 = 0.43 -> 0.43/55 = 0.0078
     // Step for blue color: 1 - 0.2 = 0.8 -> 0.8/55 = 0.0145
-    if (!sunStopped){
+    /*if (!sunStopped){
         objGreen = (angle > 0) ? objGreen + 0.0078 : objGreen - 0.0078;
         objBlue = (angle > 0) ? objBlue + 0.0145 : objBlue - 0.0145;
-    }
+    }*/
     light.color = [1, objGreen, objBlue];
 
 
