@@ -19,7 +19,6 @@ gl.getExtension("OES_standard_derivatives");
 
 let isDragging = false;
 let timeout = null;
-let isChecked = false;
 let cameraCanvas = document.getElementById('camera');
 ctx_camera = cameraCanvas.getContext('2d');
 
