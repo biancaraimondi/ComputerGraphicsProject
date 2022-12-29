@@ -11,7 +11,6 @@ let objBlue = 0.2;
 let skyRed = 0.7529; // 192/255 = 0.7529
 let skyGreen = 0.5961; // 152/255 = 0.6
 let skyBlue = 0.9608; // 245/255 = 0.9608
-//let anticlockwise = 1;
 
 let canvas = document.getElementById("canvas");
 let gl = canvas.getContext("webgl");
@@ -19,6 +18,7 @@ gl.getExtension("OES_standard_derivatives");
 
 let isDragging = false;
 let timeout = null;
+let shadowStopped = false;
 let cameraCanvas = document.getElementById('camera');
 ctx_camera = cameraCanvas.getContext('2d');
 

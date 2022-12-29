@@ -78,7 +78,9 @@ function setObjectsColors(value) {
     //if value is 0.5, objGreen is 0.91
     //if value is between 0 and 0.5, objGreen is between 0.48 and 0.91
     //if value is between 0.5 and 1, objGreen is between 0.91 and 0.48
-    objGreen = (angle < 0) ? 0.48 + 0.43 * (1 - value) * 1.5 : 0.48 + 0.43 * value * 1.5;
+    //objGreen = (angle < 0) ? 0.48 + 0.43 * (1 - value) * 1.5 : 0.48 + 0.43 * value * 1.5;
+    objGreen = (angle < 0) ? 0.68 + 0.03 * (1 - value) * 1.5 : 0.68 + 0.03 * value * 1.5;
+
 
     //set objBlue between 1 and 0.2 based on value
     //if value is 0, objBlue is 1
@@ -86,7 +88,8 @@ function setObjectsColors(value) {
     //if value is 0.5, objBlue is 0.2
     //if value is between 0 and 0.5, objBlue is between 1 and 0.2
     //if value is between 0.5 and 1, objBlue is between 0.2 and 1
-    objBlue = (angle < 0) ? 1 - 0.8 * (1 - value) * 1.5 : 1 - 0.8 * value * 1.5;
+    //objBlue = (angle < 0) ? 1 - 0.8 * (1 - value) * 1.5 : 1 - 0.8 * value * 1.5;
+    objBlue = (angle < 0) ? 0.8 - 0.2 * (1 - value) * 1.5 : 0.8 - 0.2 * value * 1.5;
 
     //set skyRed between 149 and 192 based on value
     //if value is 0, skyRed is 149
@@ -94,7 +97,7 @@ function setObjectsColors(value) {
     //if value is 0.5, skyRed is 192
     //if value is between 0 and 0.5, skyRed is between 149 and 192
     //if value is between 0.5 and 1, skyRed is between 192 and 149
-    skyRed = ((angle < 0) ? 192 - 43 * (1 - value) * 3 : 192 - 43 * value * 3) / 255;
+    skyRed = ((angle < 0) ? 192 - 23 * (1 - value) * 3 : 192 - 23 * value * 3) / 255;
 
     //set skyGreen between 170 and 152 based on value
     //if value is 0, skyGreen is 170
@@ -102,7 +105,7 @@ function setObjectsColors(value) {
     //if value is 0.5, skyGreen is 152
     //if value is between 0 and 0.5, skyGreen is between 170 and 152
     //if value is between 0.5 and 1, skyGreen is between 152 and 170
-    skyGreen = ((angle < 0) ? 152 + 18 * (1 - value) * 3 : 152 + 18 * value * 3) / 255;
+    skyGreen = ((angle < 0) ? 152 + 8 * (1 - value) * 3 : 152 + 8 * value * 3) / 255;
 
     //set skyBlue between 250 and 245 based on value
     //if value is 0, skyBlue is 250
@@ -110,7 +113,7 @@ function setObjectsColors(value) {
     //if value is 0.5, skyBlue is 245
     //if value is between 0 and 0.5, skyBlue is between 250 and 245
     //if value is between 0.5 and 1, skyBlue is between 245 and 250
-    skyBlue = ((angle < 0) ? 245 + 5 * (1 - value) * 3 : 245 + 5 * value * 3) / 255;
+    skyBlue = ((angle < 0) ? 245 + 2 * (1 - value) * 3 : 245 + 2 * value * 3) / 255;
 }
 
 

@@ -13,6 +13,7 @@ function drawObjects(value) {
     drawBackground();
     drawButtons();
     drawSlider(value);
+    drawCheckbox();
 }
 
 function drawBackground() {
@@ -150,6 +151,32 @@ function drawSlider(value) {
         angle = 55 - (value * 110);
         setObjectsColors(value);
         isDragging = false;
+    });
+
+}
+
+
+function drawCheckbox() {
+
+    ctx_camera.fillStyle = "white";
+    ctx_camera.fillRect(20, 275, 20, 20);
+    if (shadowStopped) {
+        ctx_camera.fillStyle = "black";
+        ctx_camera.fillRect(22, 277, 14, 14);
+    }
+    ctx_camera.fillStyle = "black";
+    ctx_camera.fillText("Stop shadows", 20, 265);
+
+    ctx_camera.canvas.addEventListener("click", function(e) {
+        let x = e.offsetX - ctx_camera.canvas.offsetLeft;
+        let y = e.offsetY - ctx_camera.canvas.offsetTop;
+
+        if (x > 20 - 15 && x < 40 - 15 && y > 275 && y < 295) {
+            shadowStopped = !shadowStopped;
+            drawObjects(0.5);
+        }
+
+        //modificare per il RESET
     });
 
 }
