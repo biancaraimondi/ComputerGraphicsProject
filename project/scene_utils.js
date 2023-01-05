@@ -198,7 +198,7 @@ function draw() {
 
     meshes.forEach(m => {
         // if the mesh is the sun do not draw the shadow on it
-        if(m.name === "sun"){
+        if(shadowStopped || m.name === "sun"){
             sharedUniforms = {
                 u_ambientLight: light.ambient,                      // Ambient
                 u_lightDirection: m4.normalize(light.direction),    // Light Direction

@@ -19,6 +19,7 @@ gl.getExtension("OES_standard_derivatives");
 let isDragging = false;
 let timeout = null;
 let shadowStopped = false;
+let valueForSun = 0;
 let cameraCanvas = document.getElementById('camera');
 ctx_camera = cameraCanvas.getContext('2d');
 
