@@ -94,7 +94,7 @@ function prepareShadows(){
     shadow.fov = 80;
     shadow.projWidth = 2;
     shadow.projHeight = 2;
-    shadow.zFarProj = 20;
+    shadow.zFarProj = 50;
     shadow.bias = -0.006;
 }
 
@@ -166,7 +166,7 @@ function draw() {
 
     meshes.forEach(m => {
         // if the mesh is not the sun nor the sand, compute the shadow
-        if(m.name !== "sun" && m.name !== "sun")
+        if(m.name !== "sun" && m.name !== "sand")
             m.render(gl, colorProgramInfo, sharedUniforms);
     });
 

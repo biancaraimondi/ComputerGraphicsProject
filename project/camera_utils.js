@@ -63,12 +63,12 @@ function makeCamera() {
         // if the user clicked on the button with the text "D"
         if (x > (width/2 - 20 - 15) && x < (width/2 - 20 + 40 - 15) && y > 30 && y < 30 + 25) {
             console.log("Clicked on D");
-            camera.dolly(-0.05);
+            camera.dolly(-0.5);
         }
         // if the user clicked on the button with the text "U"
         if (x > (width/2 - 20 - 15) && x < (width/2 - 20 + 40 - 15) && y > 105 && y < 105 + 25) {
             console.log("Clicked on U");
-            camera.dolly(0.05);
+            camera.dolly(0.5);
         }
         // if the user clicked on the button with the text "R"
         if (x > (width/2 + 20 - 15) && x < (width/2 + 20 + 40 - 15) && y > 65 && y < 65 + 25) {
