@@ -2,15 +2,14 @@
 // @light is the light source
 // @angle is the angle of the light source (the sun)
 // @shadow is for shadow settings
-// @anticlockwise is used for the inverse rotation of the sun
 let light = [];
 let angle = 55;
 let shadow = [];
-let objGreen = 0.48;
-let objBlue = 0.2;
-let skyRed = 0.7529; // 192/255 = 0.7529
-let skyGreen = 0.5961; // 152/255 = 0.6
-let skyBlue = 0.9608; // 245/255 = 0.9608
+let objGreen = 0;
+let objBlue = 0;
+let skyRed = 0;
+let skyGreen = 0;
+let skyBlue = 0;
 
 let canvas = document.getElementById("canvas");
 let gl = canvas.getContext("webgl");
@@ -51,14 +50,14 @@ prepareShadows();
 
 let meshes = []; // Array used to store all the mesh used in the scene
 load_mesh();
-window["sunPosition"] = meshes[3].position;
+let sunPosition = meshes[3].position;
 
 // @position is the position of the camera
 // @target is the target of the camera
 // @up is the up vector of the camera
 const position = [0,6,18], target = [0, 7, 0], up = [0, 1, 0];
-window["camera"] = new Camera(position, target, up);
-window["keys"] = {};
+let camera = new Camera(position, target, up);
+let keys = {};
 
 // Light used in the scene
 light = {position: [0,5,18],direction : [1,1,1], color : [1.0, 1.0, 1.0], ambient: [0.1,0.1,0.1] };

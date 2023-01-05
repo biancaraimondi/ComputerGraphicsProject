@@ -57,12 +57,6 @@ function key_controller(){
 }
 
 function prepareShadows(){
-    // Program used to draw from the light perspective
-    colorProgramInfo = webglUtils.createProgramInfo(gl, ['color-vertex-shader', 'color-fragment-shader']);
-
-    // Program used to draw from the camera perspective
-    textureProgramInfo = webglUtils.createProgramInfo(gl, ['vertex-shader-3d', 'fragment-shader-3d']);
-
     // Shadow map texture
     shadow.depthTexture = gl.createTexture();
     shadow.depthTextureSize = 4096; // Texture resolution
@@ -164,11 +158,14 @@ function draw() {
     gl.viewport(0, 0, shadow.depthTextureSize, shadow.depthTextureSize);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    meshes.forEach(m => {
-        // if the mesh is not the sun nor the sand, compute the shadow
-        if(m.name !== "sun" && m.name !== "sand")
-            m.render(gl, colorProgramInfo, sharedUniforms);
-    });
+    if(!shadowStopped){
+        meshes.forEach(m => {
+            // Program used to draw from the light perspective - it creates the shadow map
+            if (m.name !== "sun") {
+                m.render(gl, colorProgramInfo, sharedUniforms);
+            }
+        });
+    }
 
     bindFrameBufferNull()
 
@@ -199,7 +196,7 @@ function draw() {
     meshes.forEach(m => {
         // if the mesh is the sun do not draw the shadow on it
         if(shadowStopped || m.name === "sun"){
-            sharedUniforms = {
+            let sharedUniforms2 = {
                 u_ambientLight: light.ambient,                      // Ambient
                 u_lightDirection: m4.normalize(light.direction),    // Light Direction
                 u_lightColor: light.color,                          // Light Color
@@ -208,8 +205,10 @@ function draw() {
                 u_viewWorldPosition: camera.getPosition(),          // Camera position
                 u_lightPosition: (light.position),
             };
-            m.render(gl, program, sharedUniforms);
+            // Program used to draw the scene from the camera perspective
+            m.render(gl, program, sharedUniforms2);
         } else {
+            // Program used to draw the scene from the camera perspective
             m.render(gl, textureProgramInfo, sharedUniforms);
         }
     });

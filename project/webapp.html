@@ -25,7 +25,7 @@
 		<script src="utils.js" defer></script>
 		<script src="main.js" defer></script>
 
-
+		<!-- shaders to draw objects without shadows -->
 		<script id="base-vertex-shader" type="x-shader/x-vertex">
 			attribute vec4 a_position; //posizione del vertice
 			attribute vec3 a_normal; //normale
@@ -92,6 +92,7 @@
 			}
 		</script>
 
+		<!-- shaders to draw objects with shadows -->
 		<script  id="vertex-shader-3d" type="x-shader/x-vertex">
 			attribute vec4 a_position;
 			attribute vec2 a_texcoord;
@@ -196,6 +197,7 @@
 			}
 		</script>
 
+		<!-- shaders used to create the shadow map -->
 		<script  id="color-vertex-shader" type="x-shader/x-vertex">
 			attribute vec4 a_position;
 
