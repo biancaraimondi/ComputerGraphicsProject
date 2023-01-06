@@ -49,6 +49,7 @@ class MeshObj {
             }
         })
 
+        // Create a bufferInfo for each geometry
         this.mesh.parts = this.mesh.data.geometries.map(({material, data}) => {
             if (data.color) {
                 if (data.position.length === data.color.length) {

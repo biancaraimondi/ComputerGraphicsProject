@@ -56,6 +56,7 @@ function key_controller(){
     }
 }
 
+// function used to prepare the shadow map
 function prepareShadows(){
     // Shadow map texture
     shadow.depthTexture = gl.createTexture();
@@ -115,19 +116,20 @@ function draw() {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
-    // sun movement editing the angle
+    // edit the angle of the sun if sun is moving, i.e. if the slider is not pressed
     if (!sunStopped){
         if (angle === -55) {
             angle = 55;
         } else {
             angle -= 0.5;
         }
+        // change colors of the sky and of the objects using the sun position
         setObjectsColorsBySun();
     }
 
+    // set the light position based on the sun position
     let x = sunPosition[0] * Math.cos(degToRad(angle)) - sunPosition[1] * Math.sin(degToRad(angle));
     let y = sunPosition[0] * Math.sin(degToRad(angle)) + sunPosition[1] * Math.cos(degToRad(angle));
-    // set the light position based on the sun position
     light.position = [x, y, sunPosition[2]];
     light.color = [1, objGreen, objBlue];
 
@@ -160,7 +162,7 @@ function draw() {
 
     if(!shadowStopped){
         meshes.forEach(m => {
-            // Program used to draw from the light perspective - it creates the shadow map
+            // Program used to draw from the light perspective
             if (m.name !== "sun") {
                 m.render(gl, colorProgramInfo, sharedUniforms);
             }

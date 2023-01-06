@@ -80,7 +80,6 @@ function setObjectsColors(value) {
     //if value is between 0.5 and 1, objGreen is between 0.91 and 0.48
     objGreen = (angle < 0) ? 0.68 + 0.03 * (1 - value) * 1.5 : 0.68 + 0.03 * value * 1.5;
 
-
     //set objBlue between 1 and 0.2 based on value
     objBlue = (angle < 0) ? 0.8 - 0.2 * (1 - value) * 1.5 : 0.8 - 0.2 * value * 1.5;
 
